@@ -1,0 +1,15 @@
+import { Mail } from "./Mail";
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <div className="flex">
+      <Mail />
+      {children}
+    </div>
+  );
+}
+
