@@ -33,4 +33,8 @@
 	:global(body) {
 		display: flex;
 	}
+
+	main {
+		width: 100%;
+	}
 </style>
