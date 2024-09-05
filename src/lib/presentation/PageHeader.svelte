@@ -15,13 +15,14 @@
 <style>
 	header {
 		width: 100%;
-		height: calc(36px + 1rem);
+		height: calc(42px + 1rem);
+		padding: 0 1.5rem;
+    margin-bottom: 1rem;
 
 		background: #141517;
 
 		display: flex;
 		align-items: center;
-		padding: 0 1.5rem;
 	}
 
 	h1 {
