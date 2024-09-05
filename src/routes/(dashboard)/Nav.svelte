@@ -10,18 +10,32 @@
 
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { Divider, NativeSelect } from '@svelteuidev/core';
+	import { Divider, NativeSelect, Space } from '@svelteuidev/core';
 
 	import TiHomeOutline from 'svelte-icons/ti/TiHomeOutline.svelte';
+	import DiGithubBadge from 'svelte-icons/di/DiGithubBadge.svelte';
+
+	const isLogin = true;
 
 	export let links: NavItem[];
 </script>
 
 <nav>
-	<div>
-		<NativeSelect class="nav__project-switcher" data={['RustLangES', 'Forms']} />
+	<div class="nav__project">
+		{#if isLogin}
+			<NativeSelect
+				class="nav__project-switcher"
+				data={['RustLangES', 'Forms']}
+				placeholder="Pick one"
+			/>
+		{:else}
+			<button class="nav__project-login">
+				<DiGithubBadge />
+				<p>Login with GitHub</p>
+			</button>
+		{/if}
 	</div>
-	<Divider />
+	<Space h="xl" />
 	<ul>
 		{#each links as link}
 			{#if link === 'separator'}
@@ -46,12 +60,10 @@
 
 <style>
 	nav {
-		padding: 0.5rem 0;
 		width: 100%;
 		max-width: 250px;
 
 		background: #141517;
-		border-right: 1px #777 solid;
 
 		display: flex;
 		flex-direction: column;
@@ -59,11 +71,34 @@
 
 	/* TODO: Move to the svelteui theme file. (Not exist yet) */
 	:global(.svelteui-Divider-root) {
-		border-color: #333;
+		border-color: #777 !important;
 	}
 
-	:global(.nav__project-switcher) {
+	.nav__project {
+		height: 52px;
+		padding: 0.5rem 0;
 		margin: 0 0.5rem;
+	}
+
+	:global(.nav__project-switcher select) {
+		height: 42px !important;
+	}
+
+	.nav__project-login {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		color: white;
+		border: 1px solid rgb(44, 46, 51);
+		background-color: rgb(20, 21, 23);
+		padding: 0.25rem 0.75rem;
+		height: 42px;
+	}
+
+	.nav__project-login > :global(svg) {
+		width: 32px;
+		height: 32px;
 	}
 
 	ul {
@@ -94,6 +129,8 @@
 	.nav__link-label {
 		display: flex;
 		gap: 0.5rem;
+		font-size: 0.9rem;
+		font-weight: normal;
 	}
 
 	.nav__link-label > :global(svg) {
