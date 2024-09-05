@@ -13,13 +13,23 @@
 	import { Divider, NativeSelect } from '@svelteuidev/core';
 
 	import TiHomeOutline from 'svelte-icons/ti/TiHomeOutline.svelte';
+	import DiGithubBadge from 'svelte-icons/di/DiGithubBadge.svelte';
+
+	const isLogin = false;
 
 	export let links: NavItem[];
 </script>
 
 <nav>
-	<div>
-		<NativeSelect class="nav__project-switcher" data={['RustLangES', 'Forms']} />
+	<div class="nav__project">
+		{#if isLogin}
+			<NativeSelect class="nav__project-switcher" data={['RustLangES', 'Forms']} />
+		{:else}
+			<button class="nav__project-login">
+				<DiGithubBadge />
+				<p>Login with GitHub</p>
+			</button>
+		{/if}
 	</div>
 	<Divider />
 	<ul>
@@ -62,8 +72,20 @@
 		border-color: #333;
 	}
 
-	:global(.nav__project-switcher) {
+	.nav__project {
 		margin: 0 0.5rem;
+	}
+
+	.nav__project-login {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+	}
+
+	.nav__project-login > :global(svg) {
+		width: 32px;
+		height: 32px;
 	}
 
 	ul {
