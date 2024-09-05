@@ -1,7 +1,36 @@
-<script>
-  import { NativeSelect } from "@svelteuidev/core"
+<script lang="ts">
+	import '../../app.css';
+
+	import ThemeProvider, { setDarkTheme } from '$lib/presentation/ThemeProvider.svelte';
+
+	import Nav, { type NavItem } from './Nav.svelte';
+
+	setDarkTheme();
+
+	const links: NavItem[] = [
+		{
+			href: '/',
+			label: 'Home'
+		},
+
+		{
+			href: '/#sent',
+			label: 'Sent',
+			badge: '24'
+		}
+	];
 </script>
 
-<NativeSelect />
+<ThemeProvider>
+	<Nav {links} />
 
-<slot />
+	<main>
+		<slot />
+	</main>
+</ThemeProvider>
+
+<style>
+	:global(body) {
+		display: flex;
+	}
+</style>

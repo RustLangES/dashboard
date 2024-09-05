@@ -7,13 +7,17 @@ inputs @ {
 }: let
 
   devShellBuildInputs = (with pkgs; [
-      # deno
       nodejs
       nodePackages.pnpm
-      # nodePackages.prettier
-      # nodePackages.typescript-language-server
-      # nodePackages.svelte-language-server
       (import ./nix/wrangler.nix inputs)
+
+      # Develop
+      deno
+      nodePackages.prettier
+      # nodePackages.prettier-plugin-svelte
+      nodePackages.typescript-language-server
+      nodePackages.svelte-language-server
+      nodePackages.vscode-langservers-extracted
     ]);
 in {
   # `nix run .#zellij`
