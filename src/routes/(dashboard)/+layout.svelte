@@ -3,22 +3,12 @@
 
 	import ThemeProvider, { setDarkTheme } from '$lib/presentation/ThemeProvider.svelte';
 
-	import Nav, { type NavItem } from './Nav.svelte';
+	import Nav from '$lib/presentation/NavBar.svelte';
+	import { navbar } from '$lib/presentation/NavBar';
 
 	setDarkTheme();
 
-	const links: NavItem[] = [
-		{
-			href: '/',
-			label: 'Home'
-		},
-
-		{
-			href: '/#sent',
-			label: 'Sent',
-			badge: '24'
-		}
-	];
+	$: links = $navbar ?? [];
 </script>
 
 <ThemeProvider>

@@ -1,19 +1,11 @@
-<script lang="ts" context="module">
-	export type NavItem =
-		| {
-				badge?: string;
-				href: string;
-				label: string;
-		  }
-		| 'separator';
-</script>
-
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { Divider, NativeSelect, Space } from '@svelteuidev/core';
 
 	import TiHomeOutline from 'svelte-icons/ti/TiHomeOutline.svelte';
 	import DiGithubBadge from 'svelte-icons/di/DiGithubBadge.svelte';
+
+	import type { NavItem } from './NavBar';
 
 	const isLogin = true;
 
