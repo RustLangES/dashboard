@@ -54,12 +54,12 @@
 	nav {
 		width: 100%;
 		max-width: 250px;
-    height: 100vh;
+		height: 100vh;
 
 		background: #141517;
 
-    position: sticky;
-    top: 0;
+		position: sticky;
+		top: 0;
 
 		display: flex;
 		flex-direction: column;

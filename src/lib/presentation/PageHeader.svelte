@@ -17,7 +17,7 @@
 		width: 100%;
 		height: calc(42px + 1rem);
 		padding: 0 1.5rem;
-    margin-bottom: 1rem;
+		margin-bottom: 1rem;
 
 		background: #141517;
 

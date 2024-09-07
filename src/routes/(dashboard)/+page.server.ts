@@ -1,16 +1,16 @@
-import { loadNavbar, type NavItem } from "$lib/presentation/NavBar";
+import { loadNavbar, type NavItem } from '$lib/presentation/NavBar';
 
 const LINKS: NavItem[] = [
-  {
-    href: "/",
-    label: "Home",
-  },
+	{
+		href: '/',
+		label: 'Home'
+	}
 ];
 
 export function load() {
-  const navbar = loadNavbar(LINKS);
+	const navbar = loadNavbar(LINKS);
 
-  return {
-    ...navbar
-  }
+	return {
+		...navbar
+	};
 }
