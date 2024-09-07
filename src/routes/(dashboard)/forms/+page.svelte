@@ -1,6 +1,9 @@
 <script lang="ts" context="module">
-	import PageHeader from '$lib/presentation/PageHeader.svelte';
 	import MdAdd from 'svelte-icons/md/MdAdd.svelte';
+
+	import PageHeader from '$lib/presentation/PageHeader.svelte';
+
+  import {forms} from "$lib/forms/service/stores"
 
 	export type FormListItem = {
 		id: number;
@@ -8,16 +11,6 @@
 		description?: string;
 	};
 
-	const forms: FormListItem[] = [
-		{
-			id: 1,
-			title: 'Form 1'
-		},
-		{
-			id: 2,
-			title: 'Form 1'
-		}
-	];
 </script>
 
 <PageHeader title="Forms" />
@@ -29,7 +22,7 @@
 		</a>
 	</li>
 
-	{#each forms as form}
+	{#each $forms as form}
 		<li>
 			<a href={'/forms/' + form.id}>
 				<h2>{form.title}</h2>
