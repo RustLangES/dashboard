@@ -1,6 +1,6 @@
 <script>
 	import { receiveNavbar } from '$lib/presentation/NavBar';
-	import { receiveForms } from '$lib/forms/service/stores';
+	import { receiveForms } from '$lib/forms/service/stores/forms';
 
 	export let data;
 

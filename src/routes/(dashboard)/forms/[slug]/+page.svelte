@@ -3,7 +3,5 @@
 </script>
 
 <Center override={{ height: '100%' }}>
-	Previewer
-	<br />
-	<p>Poner las configuraciones pa</p>
+	<p>Previewer</p>
 </Center>

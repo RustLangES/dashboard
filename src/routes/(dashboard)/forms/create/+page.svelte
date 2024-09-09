@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
 	import PageHeader from '$lib/presentation/PageHeader.svelte';
 
 	import { Button, Center, Flex, Switch, Textarea, TextInput } from '@svelteuidev/core';
@@ -9,13 +10,31 @@
 	let require_login = false;
 	let multiple_times = false;
 
-	function handleCreate() {
+	async function handleCreate() {
 		if (!name) {
 			nameError = 'Please enter the name of the form';
 			return;
 		}
 
-		console.log('Data enviada');
+		try {
+			const response = await fetch(window.location.href, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ title: name, require_login, edition, multiple_times })
+			});
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`);
+			}
+
+			const data = await response.json();
+
+			goto(`/forms/${data}`);
+		} catch (error) {
+			console.error(error);
+		}
 	}
 </script>
 

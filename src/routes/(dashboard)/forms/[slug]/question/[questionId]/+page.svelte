@@ -1,6 +1,25 @@
 <script lang="ts">
 	import { Button, Input, InputWrapper, NativeSelect, Switch, Textarea } from '@svelteuidev/core';
 
+	import { receiveQuestion } from '$lib/forms/service/stores/question';
+
+	export let data;
+	receiveQuestion(data);
+
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
+
+	let dataAux =
+		typeof data.question.data === 'string' ? JSON.parse(data.question.data) : data.question.data;
+
+	console.log('Data loaded:', dataAux);
+
+	dataAux = {
+		canMultiple: dataAux.canMultiple ?? false,
+		required: dataAux.required ?? false,
+		options: dataAux.options ?? []
+	};
+
 	type Step<Type extends string, Data extends object> = {
 		title: string;
 		description: string;
@@ -20,9 +39,9 @@
 		}
 	>;
 
-	let title = 'Question title';
-	let description = 'Description of the question';
-	let type: 'text' | 'questionText' | 'options' | '' = '';
+	let title = data.question.title;
+	let description = data.question.description;
+	let type = data.question.type;
 
 	let newData = '';
 	let newDataError = '';
@@ -33,9 +52,13 @@
 		type,
 		data:
 			type === 'options'
-				? { canMultiple: false, required: false, options: [] }
+				? {
+						canMultiple: dataAux.canMultiple,
+						required: dataAux.required,
+						options: dataAux.options
+					}
 				: type === 'questionText'
-					? { required: false }
+					? { required: dataAux.required }
 					: {}
 	} as FormStep;
 
@@ -52,6 +75,59 @@
 			];
 			newData = '';
 			newDataError = '';
+		}
+	}
+
+	async function handleDelete() {
+		try {
+			const response = await fetch(window.location.href, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					question_id: parseInt($page.params.questionId)
+				})
+			});
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`);
+			}
+
+			goto(`/forms/${$page.params.slug}`);
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	async function handleUpdate() {
+		try {
+			const dataToSend =
+				type === 'options'
+					? {
+							canMultiple: (result.data as FormStepOptions['data']).canMultiple,
+							required: (result.data as FormStepOptions['data']).required,
+							options: (result.data as FormStepOptions['data']).options
+						}
+					: type === 'questionText'
+						? { required: (result.data as FormStepQuestionText['data']).required }
+						: {};
+
+			await fetch(window.location.href, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					id_question: parseInt($page.params.questionId),
+					title,
+					description,
+					type,
+					data: dataToSend
+				})
+			});
+		} catch (error) {
+			console.error('Error updating question:', error);
 		}
 	}
 </script>
@@ -78,8 +154,8 @@
 {:else if result.type === 'questionText'}
 	<Switch label="Required" bind:checked={result.data.required} />
 {:else if result.type === 'options'}
-	<Switch label="Can Multiple" bind:checked={result.data.canMultiple} />
-	<Switch label="Required" bind:checked={result.data.required} />
+	<Switch label="Can Multiple" bind:checked={dataAux.canMultiple} />
+	<Switch label="Required" bind:checked={dataAux.required} />
 
 	<h3>Options</h3>
 	{#each result.data.options as value, index (index)}
@@ -96,3 +172,15 @@
 	</InputWrapper>
 	<Button on:click={handleClick}>Add option</Button>
 {/if}
+
+<div class="buttons">
+	<Button on:click={handleDelete} color="red">Delete</Button>
+	<Button on:click={handleUpdate} color="green">Update</Button>
+</div>
+
+<style>
+	.buttons {
+		display: flex;
+		justify-content: space-between;
+	}
+</style>

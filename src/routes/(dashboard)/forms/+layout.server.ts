@@ -1,4 +1,4 @@
-import { loadFormsFromDB } from '$lib/forms/service/stores';
+import { loadFormsFromDB } from '$lib/forms/service/stores/forms';
 import { loadNavbar } from '$lib/presentation/NavBar';
 import type { LayoutServerLoad } from './$types';
 
