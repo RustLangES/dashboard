@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import type { Form } from '../models';
+import type { Form } from '../../models';
 
 export const forms = writable<Form[]>([]);
 

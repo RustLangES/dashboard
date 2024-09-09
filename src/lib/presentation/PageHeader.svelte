@@ -10,6 +10,7 @@
 	<h1>
 		{title}
 	</h1>
+	<slot></slot>
 </header>
 
 <style>
@@ -23,6 +24,7 @@
 
 		display: flex;
 		align-items: center;
+		justify-content: space-between;
 	}
 
 	h1 {

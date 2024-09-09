@@ -3,14 +3,13 @@
 
 	import PageHeader from '$lib/presentation/PageHeader.svelte';
 
-  import {forms} from "$lib/forms/service/stores"
+	import { forms } from '$lib/forms/service/stores/forms';
 
 	export type FormListItem = {
 		id: number;
 		title: string;
 		description?: string;
 	};
-
 </script>
 
 <PageHeader title="Forms" />
