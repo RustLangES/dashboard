@@ -1,0 +1,42 @@
+name: Deploy to production
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/deploy.yml"
+      - "wrangler.toml"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - name: Install worker-build
+        run: |
+          cargo install worker-build
+      - name: Deploy
+        uses: cloudflare/wrangler-action@v3
+        env:
+          GH_CLIENT_ID: ${{ secrets.GH_APP_CLIENT_ID }}
+          GH_CLIENT_SECRET: ${{ secrets.GH_APP_CLIENT_SECRET }}
+          ADMINS: ${{ secrets.ADMINS }}
+          API_HOST: ${{ secrets.API_HOST }}
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: "${{ matrix.path }}"
+          wranglerVersion: "3.67.0"
+          secrets: |
+            GH_CLIENT_ID
+            GH_CLIENT_SECRET
+            ADMINS
+            API_HOST
