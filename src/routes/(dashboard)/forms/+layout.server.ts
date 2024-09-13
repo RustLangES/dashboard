@@ -15,7 +15,7 @@ export const load: LayoutServerLoad = async ({ platform }) => {
 			label: form.title,
 			badge: form.deleted === 1 ? 'X' : undefined
 		}))
-	]);
+	], "Forms");
 
 	return {
 		...navbar,

@@ -8,11 +8,12 @@
 
 	setDarkTheme();
 
-	$: links = $navbar ?? [];
+	$: selectedProject = $navbar.selectedProject ?? "";
+	$: links = $navbar.links ?? [];
 </script>
 
 <ThemeProvider>
-	<Nav {links} />
+	<Nav {selectedProject} {links} />
 
 	<main>
 		<slot />
