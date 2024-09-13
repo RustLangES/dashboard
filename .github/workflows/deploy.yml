@@ -30,7 +30,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: "${{ matrix.path }}"
-          wranglerVersion: "3.67.0"
+          wranglerVersion: "3.77.0"
           secrets: |
             ADMINS
             AUTH_GITHUB_ID
