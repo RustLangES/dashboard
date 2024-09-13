@@ -26,17 +26,19 @@ jobs:
       - name: Deploy
         uses: cloudflare/wrangler-action@v3
         env:
-          GH_CLIENT_ID: ${{ secrets.GH_APP_CLIENT_ID }}
-          GH_CLIENT_SECRET: ${{ secrets.GH_APP_CLIENT_SECRET }}
+          AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+          AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
           ADMINS: ${{ secrets.ADMINS }}
-          API_HOST: ${{ secrets.API_HOST }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: "${{ matrix.path }}"
           wranglerVersion: "3.67.0"
           secrets: |
-            GH_CLIENT_ID
-            GH_CLIENT_SECRET
             ADMINS
-            API_HOST
+            AUTH_GITHUB_ID
+            AUTH_GITHUB_SECRET
+            AUTH_SECRET
+            AUTH_TRUST_HOST

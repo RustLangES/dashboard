@@ -70,16 +70,22 @@ jobs:
         id: deploy
         uses: cloudflare/wrangler-action@v3
         env:
-          API_HOST: ${{ secrets.API_HOST }}
-          HOST: ${{ secrets.API_HOST }}
+          AUTH_GITHUB_ID: ${{ secrets.AUTH_GITHUB_ID }}
+          AUTH_GITHUB_SECRET: ${{ secrets.AUTH_GITHUB_SECRET }}
+          AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
+          AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+          ADMINS: ${{ secrets.ADMINS }}
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: "3.67.0"
           command: pages deploy ./dist --project-name=dashboard --branch="${{ env.BRANCH_NAME }}"
           secrets: |
-            API_HOST
-            HOST
+            ADMINS
+            AUTH_GITHUB_ID
+            AUTH_GITHUB_SECRET
+            AUTH_SECRET
+            AUTH_TRUST_HOST
 
       - name: Extract hash from CF url Deploy
         run: |
