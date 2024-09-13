@@ -1,29 +1,28 @@
 <script lang="ts">
-	import { page } from '$app/stores';
+	import { signIn } from '@auth/sveltekit/client';
 	import { Divider, NativeSelect, Space } from '@svelteuidev/core';
+	import { page } from '$app/stores';
 
 	import TiHomeOutline from 'svelte-icons/ti/TiHomeOutline.svelte';
 	import DiGithubBadge from 'svelte-icons/di/DiGithubBadge.svelte';
 
 	import type { NavItem } from './NavBar';
 
-	const isLogin = true;
-
 	export let links: NavItem[];
 </script>
 
 <nav>
 	<div class="nav__project">
-		{#if isLogin}
+		{#if $page.data.session}
 			<NativeSelect
 				class="nav__project-switcher"
 				data={['RustLangES', 'Forms']}
 				placeholder="Pick one"
 			/>
 		{:else}
-			<button class="nav__project-login">
-				<DiGithubBadge />
-				<p>Login with GitHub</p>
+			<button on:click={() => signIn("github")} class="nav__project-login">
+					<DiGithubBadge />
+					<p>Login with GitHub</p>
 			</button>
 		{/if}
 	</div>
@@ -81,18 +80,21 @@
 	}
 
 	.nav__project-login {
-		display: flex;
-		justify-content: center;
-		align-items: center;
+		padding: 0.25rem 0.75rem;
 		width: 100%;
+		height: 42px;
+    gap: 0.5rem;
+
 		color: white;
 		border: 1px solid rgb(44, 46, 51);
 		background-color: rgb(20, 21, 23);
-		padding: 0.25rem 0.75rem;
-		height: 42px;
+
+		display: flex;
+		justify-content: center;
+		align-items: center;
 	}
 
-	.nav__project-login > :global(svg) {
+	.nav__project-login > :global( svg) {
 		width: 32px;
 		height: 32px;
 	}
