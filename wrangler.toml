@@ -1,4 +1,4 @@
-name = "dashboard-page"
+name = "dashboard"
 main = "./dist/cloudflare/worker.js"
 site.bucket = "./dist/cloudflare/public"
 compatibility_date = "2024-09-13"

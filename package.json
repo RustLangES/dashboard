@@ -47,6 +47,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@auth/core": "^0.34.2",
 		"@auth/sveltekit": "^1.4.2"
 	}
 }

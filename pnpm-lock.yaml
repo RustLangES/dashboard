@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@auth/core':
+        specifier: ^0.34.2
+        version: 0.34.2
       '@auth/sveltekit':
         specifier: ^1.4.2
         version: 1.4.2(@sveltejs/kit@2.5.25(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.3(@types/node@22.5.3)))(svelte@4.2.19)(vite@5.4.3(@types/node@22.5.3)))(svelte@4.2.19)
