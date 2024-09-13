@@ -1,25 +1,40 @@
-import { writable } from 'svelte/store';
+import { writable } from "svelte/store";
 
 export type NavItem =
-	| {
-			badge?: string;
-			href: string;
-			label: string;
-	  }
-	| 'separator';
+  | {
+    badge?: string;
+    href: string;
+    label: string;
+  }
+  | "separator";
 
-export let navbar = writable<NavItem[]>([]);
+export interface Navbar {
+  selectedProject: string;
+  links: NavItem[];
+}
 
-export function loadNavbar(links: NavItem[]): { navbar: NavItem[] } {
-	navbar.set(links);
+export let navbar = writable<Navbar>({
+  selectedProject: "RustLangES",
+  links: [],
+});
 
-	return {
-		navbar: links
-	};
+export function loadNavbar(
+  links: NavItem[],
+  selectedProject = "RustLangES",
+): { navbar: Navbar } {
+  navbar.update((v) => {
+    v.selectedProject = selectedProject;
+    v.links = links;
+    return v;
+  });
+
+  return {
+    navbar: { links, selectedProject },
+  };
 }
 
 export function receiveNavbar(data: unknown) {
-	if (typeof data === 'object' && data !== null && 'navbar' in data) {
-		navbar.set(data.navbar as NavItem[]);
-	}
+  if (typeof data === "object" && data !== null && "navbar" in data) {
+    navbar.set(data.navbar as Navbar);
+  }
 }

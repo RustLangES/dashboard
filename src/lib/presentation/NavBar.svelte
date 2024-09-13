@@ -7,22 +7,41 @@
 	import DiGithubBadge from 'svelte-icons/di/DiGithubBadge.svelte';
 
 	import type { NavItem } from './NavBar';
+	import { goto } from '$app/navigation';
 
 	export let links: NavItem[];
+	export let selectedProject: string;
+
+	const routes = {
+		RustLangES: '/',
+		Forms: '/forms'
+	};
+
+	function onProjectChange(ev: Event) {
+		const newSelectedProject = (ev.currentTarget as HTMLSelectElement).value;
+
+		if (selectedProject !== newSelectedProject) {
+			const route = routes[newSelectedProject as keyof typeof routes];
+      selectedProject = newSelectedProject;
+			goto(route);
+		}
+	}
 </script>
 
 <nav>
 	<div class="nav__project">
 		{#if $page.data.session}
 			<NativeSelect
+				value={selectedProject}
+				on:change={onProjectChange}
 				class="nav__project-switcher"
 				data={['RustLangES', 'Forms']}
 				placeholder="Pick one"
 			/>
 		{:else}
-			<button on:click={() => signIn("github")} class="nav__project-login">
-					<DiGithubBadge />
-					<p>Login with GitHub</p>
+			<button on:click={() => signIn('github')} class="nav__project-login">
+				<DiGithubBadge />
+				<p>Login with GitHub</p>
 			</button>
 		{/if}
 	</div>
@@ -35,7 +54,7 @@
 				<li>
 					<a href={link.href} class:active={$page.url.pathname === link.href}>
 						<span class="nav__link-label">
-							<TiHomeOutline class="nav__link-icon" />
+							<TiHomeOutline />
 							{link.label}
 						</span>
 
@@ -83,7 +102,7 @@
 		padding: 0.25rem 0.75rem;
 		width: 100%;
 		height: 42px;
-    gap: 0.5rem;
+		gap: 0.5rem;
 
 		color: white;
 		border: 1px solid rgb(44, 46, 51);
@@ -94,7 +113,7 @@
 		align-items: center;
 	}
 
-	.nav__project-login > :global( svg) {
+	.nav__project-login > :global(svg) {
 		width: 32px;
 		height: 32px;
 	}
