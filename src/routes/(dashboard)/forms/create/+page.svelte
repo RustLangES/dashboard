@@ -7,6 +7,7 @@
 	let name = '';
 	let nameError = '';
 	let edition = '';
+	let description = '';
 	let require_login = false;
 	let multiple_times = false;
 
@@ -22,7 +23,7 @@
 				headers: {
 					'Content-Type': 'application/json'
 				},
-				body: JSON.stringify({ title: name, require_login, edition, multiple_times })
+				body: JSON.stringify({ title: name, require_login, edition, multiple_times, description })
 			});
 
 			if (!response.ok) {
@@ -48,6 +49,7 @@
 			label="Description"
 			placeholder="Write a description about of form"
 			resize="vertical"
+			bind:value={description}
 		/>
 		<Switch label="Require login" bind:checked={require_login} />
 		<Switch label="Multiple times" bind:checked={multiple_times} />

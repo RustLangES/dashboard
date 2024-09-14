@@ -8,6 +8,12 @@
 
 	export let data: { form: Form; questions: Question[] };
 
+	let title = data.form.title;
+	let require_login = data.form.require_login === 1;
+	let edition = data.form.edition;
+	let multiple_times = data.form.multiple_times === 1;
+	let description = data.form.description;
+
 	function handleClick() {
 		const id = $page.params.slug;
 		goto(`/forms/${id}/question/create`);
@@ -34,9 +40,34 @@
 			console.error(error);
 		}
 	}
+
+	async function handleUpdate() {
+		try {
+			const response = await fetch(`/forms/${$page.params.slug}`, {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({
+					id_form: parseInt($page.params.slug),
+					title,
+					require_login,
+					edition,
+					multiple_times,
+					description
+				})
+			});
+
+			if (!response.ok) {
+				throw new Error(`Response status: ${response.status}`);
+			}
+		} catch (error) {
+			console.error('Error updating form:', error);
+		}
+	}
 </script>
 
-<PageHeader title={data.form.title}>
+<PageHeader {title}>
 	<Button on:click={handleDelete} color="red">Delete</Button>
 </PageHeader>
 
@@ -47,7 +78,7 @@
 			variant="unstyled"
 			size="xs"
 			placeholder="Write a description"
-			value={data.form.description}
+			bind:value={description}
 		/>
 
 		<TextInput
@@ -55,15 +86,15 @@
 			variant="unstyled"
 			size="xs"
 			placeholder="Write a description"
-			value={data.form.edition}
+			bind:value={edition}
 		/>
 
 		<Tooltip label="The user require login to response this form">
-			<Switch label="Require login" checked={data.form.require_login === 1} />
+			<Switch label="Require login" bind:checked={require_login} />
 		</Tooltip>
 
 		<Tooltip label="The user can response this form multiple times">
-			<Switch label="Multiple times" checked={data.form.multiple_times === 1} />
+			<Switch label="Multiple times" bind:checked={multiple_times} />
 		</Tooltip>
 
 		<div class="form-container__new-question">
@@ -79,6 +110,7 @@
 				<li>No questions avilable</li>
 			{/each}
 		</ul>
+		<Button on:click={handleUpdate} color="green">Update</Button>
 	</section>
 
 	<Divider orientation="vertical" mx="xl" />

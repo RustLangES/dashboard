@@ -8,7 +8,7 @@
 
 	setDarkTheme();
 
-	$: selectedProject = $navbar.selectedProject ?? "";
+	$: selectedProject = $navbar.selectedProject ?? '';
 	$: links = $navbar.links ?? [];
 </script>
 

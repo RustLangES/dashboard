@@ -12,27 +12,27 @@ export async function DELETE({ platform, request }: ServerLoadEvent) {
 }
 
 export async function PATCH({ platform, request }: ServerLoadEvent) {
-  try {
-    const { id_question, title, description, type, data } = await request.json();
-    const dataString = JSON.stringify(data);
-    
-    const response = await platform!.env.FORMS_DB.prepare(
-      'UPDATE Question SET title = ?, description = ?, type = ?, data = ? WHERE id = ?'
-    )
-      .bind(title, description, type, dataString, id_question)
-      .run();
+	try {
+		const { id_question, title, description, type, data } = await request.json();
+		const dataString = JSON.stringify(data);
 
-    console.log('Update response:', response);
+		const response = await platform!.env.FORMS_DB.prepare(
+			'UPDATE Question SET title = ?, description = ?, type = ?, data = ? WHERE id = ?'
+		)
+			.bind(title, description, type, dataString, id_question)
+			.run();
 
-    return new Response(JSON.stringify({ success: true, id: id_question }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  } catch (error) {
-    console.error('Error in PATCH:', error);
-    return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' }
-    });
-  }
+		console.log('Update response:', response);
+
+		return new Response(JSON.stringify({ success: true, id: id_question }), {
+			status: 200,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	} catch (error) {
+		console.error('Error in PATCH:', error);
+		return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+			status: 500,
+			headers: { 'Content-Type': 'application/json' }
+		});
+	}
 }

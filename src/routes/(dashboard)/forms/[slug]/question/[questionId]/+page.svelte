@@ -12,8 +12,6 @@
 	let dataAux =
 		typeof data.question.data === 'string' ? JSON.parse(data.question.data) : data.question.data;
 
-	console.log('Data loaded:', dataAux);
-
 	dataAux = {
 		canMultiple: dataAux.canMultiple ?? false,
 		required: dataAux.required ?? false,
