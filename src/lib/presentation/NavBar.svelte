@@ -22,7 +22,7 @@
 
 		if (selectedProject !== newSelectedProject) {
 			const route = routes[newSelectedProject as keyof typeof routes];
-      selectedProject = newSelectedProject;
+			selectedProject = newSelectedProject;
 			goto(route);
 		}
 	}

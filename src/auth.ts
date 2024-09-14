@@ -1,7 +1,7 @@
-import { SvelteKitAuth } from "@auth/sveltekit"
-import GitHub from "@auth/sveltekit/providers/github"
- 
+import { SvelteKitAuth } from '@auth/sveltekit';
+import GitHub from '@auth/sveltekit/providers/github';
+
 export const { handle, signIn, signOut } = SvelteKitAuth({
-  providers: [GitHub],
-  trustHost: true
-})
+	providers: [GitHub],
+	trustHost: true
+});
