@@ -1,13 +1,11 @@
 <script lang="ts">
 	import { Button, Input, InputWrapper, NativeSelect, Switch, Textarea } from '@svelteuidev/core';
-
 	import { receiveQuestion } from '$lib/forms/service/stores/question';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/stores';
 
 	export let data;
 	receiveQuestion(data);
-
-	import { goto } from '$app/navigation';
-	import { page } from '$app/stores';
 
 	let dataAux =
 		typeof data.question.data === 'string' ? JSON.parse(data.question.data) : data.question.data;
@@ -18,47 +16,29 @@
 		options: dataAux.options ?? []
 	};
 
-	type Step<Type extends string, Data extends object> = {
-		title: string;
-		description: string;
-		type: Type;
-		data: Data;
-	};
-
-	type FormStep = FormStepText | FormStepQuestionText | FormStepOptions;
-	type FormStepText = Step<'text', {}>;
-	type FormStepQuestionText = Step<'questionText', { required: boolean }>;
-	type FormStepOptions = Step<
-		'options',
-		{
-			canMultiple: boolean;
-			required: boolean;
-			options: Array<string>;
-		}
-	>;
-
 	let title = data.question.title;
 	let description = data.question.description;
 	let type = data.question.type;
 
 	let newData = '';
 	let newDataError = '';
+	let options = dataAux.options ?? [];
 
-	$: result = {
+	let result = {
 		title,
 		description,
 		type,
 		data:
 			type === 'options'
-				? {
-						canMultiple: dataAux.canMultiple,
-						required: dataAux.required,
-						options: dataAux.options
-					}
+				? { canMultiple: dataAux.canMultiple, required: dataAux.required, options }
 				: type === 'questionText'
 					? { required: dataAux.required }
 					: {}
-	} as FormStep;
+	};
+
+	$: result.title = title;
+	$: result.description = description;
+	$: result.type = type;
 
 	function handleClick() {
 		if (!newData && type === 'options') {
@@ -67,10 +47,7 @@
 		}
 
 		if (type === 'options') {
-			(result.data as FormStepOptions['data']).options = [
-				...(result.data as FormStepOptions['data']).options,
-				newData
-			];
+			options = [...options, newData];
 			newData = '';
 			newDataError = '';
 		}
@@ -80,18 +57,10 @@
 		try {
 			const response = await fetch(window.location.href, {
 				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json'
-				},
-				body: JSON.stringify({
-					question_id: parseInt($page.params.questionId)
-				})
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ question_id: parseInt($page.params.questionId) })
 			});
-
-			if (!response.ok) {
-				throw new Error(`Response status: ${response.status}`);
-			}
-
+			if (!response.ok) throw new Error(`Response status: ${response.status}`);
 			goto(`/forms/${$page.params.slug}`);
 		} catch (error) {
 			console.error(error);
@@ -103,19 +72,18 @@
 			const dataToSend =
 				type === 'options'
 					? {
-							canMultiple: (result.data as FormStepOptions['data']).canMultiple,
-							required: (result.data as FormStepOptions['data']).required,
-							options: (result.data as FormStepOptions['data']).options
+							canMultiple: dataAux.canMultiple,
+							required: dataAux.required,
+							options
 						}
 					: type === 'questionText'
-						? { required: (result.data as FormStepQuestionText['data']).required }
+						? {
+								required: result.data.required
+							}
 						: {};
-
 			await fetch(window.location.href, {
 				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json'
-				},
+				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
 					id_question: parseInt($page.params.questionId),
 					title,
@@ -156,7 +124,7 @@
 	<Switch label="Required" bind:checked={dataAux.required} />
 
 	<h3>Options</h3>
-	{#each result.data.options as value, index (index)}
+	{#each options as value, index (index)}
 		<p>{value}</p>
 	{/each}
 
