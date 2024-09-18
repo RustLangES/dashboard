@@ -64,7 +64,9 @@ jobs:
       - name: Build
         # env:
         #   COLLABORATORS_API_TOKEN: ${{ secrets.COLLABORATORS_API_TOKEN }}
-        run: pnpm run build
+        run: |
+          pnpm install --frozen
+          pnpm run build
 
       - name: Deploy
         id: deploy
