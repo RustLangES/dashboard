@@ -15,6 +15,9 @@ importers:
         specifier: ^1.4.2
         version: 1.4.2(@sveltejs/kit@2.5.25(@sveltejs/vite-plugin-svelte@3.1.2(svelte@4.2.19)(vite@5.4.3(@types/node@22.5.3)))(svelte@4.2.19)(vite@5.4.3(@types/node@22.5.3)))(svelte@4.2.19)
     devDependencies:
+      '@faker-js/faker':
+        specifier: ^9.0.1
+        version: 9.0.1
       '@fontsource/fira-mono':
         specifier: ^5.0.0
         version: 5.0.14
@@ -75,6 +78,9 @@ importers:
       eslint-plugin-svelte:
         specifier: ^2.36.0
         version: 2.43.0(eslint@9.9.1)(svelte@4.2.19)
+      faker:
+        specifier: ^6.6.6
+        version: 6.6.6
       globals:
         specifier: ^15.0.0
         version: 15.9.0
@@ -492,6 +498,10 @@ packages:
   '@eslint/object-schema@2.1.4':
     resolution: {integrity: sha512-BsWiH1yFGjXXS2yvrf5LyuoSIIbPrGUWob917o+BTKuZ7qJdxX8aJLRxs1fS9n6r7vESrq1OUqb68dANcFXuQQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@faker-js/faker@9.0.1':
+    resolution: {integrity: sha512-4mDeYIgM3By7X6t5E6eYwLAa+2h4DeZDF7thhzIg6XB76jeEvMwadYAMCFJL/R4AnEBcAUO9+gL0vhy3s+qvZA==}
+    engines: {node: '>=18.0.0', npm: '>=9.0.0'}
 
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
@@ -1101,6 +1111,9 @@ packages:
   exit-hook@2.2.1:
     resolution: {integrity: sha512-eNTPlAD67BmP31LDINZ3U7HSF8l57TxOY2PmBJ1shpCvpnxBF93mWCE8YHBnXs8qiUZJc9WDcWIeC3a2HIAMfw==}
     engines: {node: '>=6'}
+
+  faker@6.6.6:
+    resolution: {integrity: sha512-9tCqYEDHI5RYFQigXFwF1hnCwcWCOJl/hmll0lr5D2Ljjb0o4wphb69wikeJDz5qCEzXCoPvG6ss5SDP6IfOdg==}
 
   fast-deep-equal@3.1.3:
     resolution: {integrity: sha512-f3qQ9oQy9j2AhBe/H9VC91wLmKBCCU/gDOnKNAYG5hswO7BLKj09Hc5HYNz9cGI++xlpDCIgDaitVs03ATR84Q==}
@@ -2186,6 +2199,8 @@ snapshots:
 
   '@eslint/object-schema@2.1.4': {}
 
+  '@faker-js/faker@9.0.1': {}
+
   '@fastify/busboy@2.1.1': {}
 
   '@floating-ui/core@1.6.7':
@@ -2866,6 +2881,8 @@ snapshots:
       strip-final-newline: 3.0.0
 
   exit-hook@2.2.1: {}
+
+  faker@6.6.6: {}
 
   fast-deep-equal@3.1.3: {}
 
