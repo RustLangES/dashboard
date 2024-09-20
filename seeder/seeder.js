@@ -1,60 +1,113 @@
-import { DatabaseSync } from 'node:sqlite';
-import { faker } from '@faker-js/faker';
-const database = new DatabaseSync(
-  '.wrangler/state/v3/d1/56d060060cda9b9bbea5ad9ecf937a6610673e7d83efb6a4863cae9a061cc103.sqlite'
-);
+import { database } from './db.js';
+import { ARROW, BOLD, DIM, ERROR, L_PURPLE, L_RED, RESET, UP_ARROW } from './util.js';
 
-function cleanDB() {
-  const delete_form = database.prepare('DELETE FROM Form');
-  const delete_question = database.prepare('DELETE FROM Question');
-  const delete_answer = database.prepare('DELETE FROM Answer');
-  const delete_session = database.prepare('DELETE FROM Session');
-  const delete_external = database.prepare('DELETE FROM External');
-  delete_form.all();
-  delete_question.all();
-  delete_answer.all();
-  delete_session.all();
-  delete_external.all();
-  console.log('Tablas Form, Question, Answer, Session, External han sido limpiadas.');
+const DATA = {};
+
+/**
+ * @param {number} count
+ * @param {string} table
+ * @param {{ [k: string]: (data: object, index: number) => string | number }} fields
+ * @param {null | (data: object, index: number) => void} extra
+ */
+export function seedTable(count, table, fields, extra) {
+	DATA[table] = [];
+	const d = [];
+
+	console.log(`${L_PURPLE} ${ARROW} Creating ${count} rows in ${table}${RESET}`);
+	const keys = Object.keys(fields);
+
+	const tableKeys = keys.join(', ');
+	const tableValues = new Array(keys.length).fill('?').join(', ');
+	const sql = `INSERT INTO ${table} (${tableKeys}) VALUES (${tableValues})`;
+	console.log(`${DIM}${ARROW} Using: ${BOLD}${sql}${RESET}`);
+	const query = database.prepare(sql);
+
+	for (let idx = 0; idx < count; idx++) {
+		const values = [];
+		const data = {};
+
+		for (const key of keys) {
+			const val = fields[key](data, idx);
+
+			if (typeof val === 'boolean') {
+				console.warn(`
+${L_RED}${ERROR} Boolean values are not supported by SQLITE. Try using numbers instead (${
+					val ? 1 : 0
+				}).
+╰┬ Table: ${table}
+ ├ Field: ${key}
+ ├ Value: ${val}
+${RESET}`);
+				process.exit(2);
+			} else if (val !== null && typeof val !== 'string' && typeof val !== 'number') {
+				console.warn(`
+${L_RED}${ERROR} ${typeof val} values are not supported by SQLITE.
+╰┬ Table: ${table}
+ ├ Field: ${key}
+ ├ Value: ${val}
+${RESET}`);
+				process.exit(2);
+			}
+
+			values.push(val);
+			data[key] = val;
+		}
+
+		const logValues = values.map((val) => {
+			val = `${val}`;
+			const v = val.slice(0, 10);
+
+			if (v.length === val.length) {
+				return v;
+			} else {
+				return v + '..';
+			}
+		});
+
+		console.log(`${DIM}${UP_ARROW} Executing with ${BOLD}(${logValues.join(', ')})${RESET}`);
+
+		try {
+			query.run(...values);
+			DATA[table].push(data);
+			d.push(data);
+
+			if (extra) {
+				extra(data, idx);
+			}
+		} catch (e) {
+			const error = `${e}`;
+			const getBacktrace = () =>
+				e.stack
+					.split('\n')
+					.slice(2, -3)
+					.join('\n')
+					.replaceAll('file://', '')
+					.replaceAll(process.cwd(), '.');
+			if (error.includes('NOT NULL')) {
+				const field = error.split('.')[1];
+
+				console.error(`\n${L_RED}${ERROR} ${table} require field "${field}"`);
+				console.error(getBacktrace());
+				process.exit(3);
+			}
+
+			console.error(e);
+			process.exit(3);
+		}
+	}
+
+	console.log(`${L_PURPLE} ${ARROW} Created ${count} rows in ${table}${RESET}`);
+
+	return d;
 }
 
-cleanDB();
+export function getRows(table) {
+	const data = DATA[table];
 
-function seedForm(n) {
-  const q = database.prepare('INSERT INTO Form (external_id, token, kind, email, created_at, deleted) VALUES (?, ?, ?, ?, ?, ?)');
-  for (let i = 0; i < n; i++) {
-    const random_external_id = faker.string.uuid();
-    const random_token = faker.string.uuid();
-    const random_kind = 'Github';
-    const random_email = faker.internet.email();
-    const random_created_at = Math.floor(Date.now() / 1000);
-    const deleted = 0;
-    q.run(random_external_id, random_token, random_kind, random_email, random_created_at, deleted);
-  }
-  console.log(`${n} registros insertados en la tabla External.`);
+	if (!data) {
+		console.error(`Use the seeder first for ${table}`);
+		process.exit(1);
+	}
 
+	return data;
 }
-
-function seedQuestion() { }
-
-function seedAnswer() { }
-
-function seedSession() { }
-
-function seedExternal(n) {
-  const q = database.prepare('INSERT INTO External (external_id, token, kind, email, created_at, deleted) VALUES (?, ?, ?, ?, ?, ?)');
-  for (let i = 0; i < n; i++) {
-    const random_external_id = faker.string.uuid();
-    const random_token = faker.string.uuid();
-    const random_kind = 'Github';
-    const random_email = faker.internet.email();
-    const random_created_at = Math.floor(Date.now() / 1000);
-    const deleted = 0;
-    q.run(random_external_id, random_token, random_kind, random_email, random_created_at, deleted);
-  }
-  console.log(`${n} registros insertados en la tabla External.`);
-}
-
-seedExternal(5);
-
-database.close();
