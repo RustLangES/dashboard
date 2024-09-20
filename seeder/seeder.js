@@ -1,5 +1,5 @@
 import { database } from './db.js';
-import { ARROW, BOLD, DIM, ERROR, L_PURPLE, L_RED, RESET, UP_ARROW } from './util.js';
+import { addIdentation, ARROW, BOLD, DIM, ERROR, getIdentation, L_PURPLE, L_RED, RESET, subIdentation, UP_ARROW } from './util.js';
 
 const DATA = {};
 
@@ -13,13 +13,14 @@ export function seedTable(count, table, fields, extra) {
 	DATA[table] = [];
 	const d = [];
 
-	console.log(`${L_PURPLE} ${ARROW} Creating ${count} rows in ${table}${RESET}`);
+	console.log(`${getIdentation()}${L_PURPLE}${ARROW} Creating ${count} rows in ${table}${RESET}`);
+  addIdentation();
 	const keys = Object.keys(fields);
 
 	const tableKeys = keys.join(', ');
 	const tableValues = new Array(keys.length).fill('?').join(', ');
 	const sql = `INSERT INTO ${table} (${tableKeys}) VALUES (${tableValues})`;
-	console.log(`${DIM}${ARROW} Using: ${BOLD}${sql}${RESET}`);
+	console.log(`${getIdentation()}${DIM}${ARROW} Using: ${BOLD}${sql}${RESET}`);
 	const query = database.prepare(sql);
 
 	for (let idx = 0; idx < count; idx++) {
@@ -64,7 +65,7 @@ ${RESET}`);
 			}
 		});
 
-		console.log(`${DIM}${UP_ARROW} Executing with ${BOLD}(${logValues.join(', ')})${RESET}`);
+		console.log(`${getIdentation()}${DIM}${UP_ARROW} Executing with ${BOLD}(${logValues.join(', ')})${RESET}`);
 
 		try {
 			query.run(...values);
@@ -96,7 +97,9 @@ ${RESET}`);
 		}
 	}
 
-	console.log(`${L_PURPLE} ${ARROW} Created ${count} rows in ${table}${RESET}`);
+  subIdentation();
+
+	console.log(`${getIdentation()}${L_PURPLE}${ARROW} Created ${count} rows in ${table}${RESET}`);
 
 	return d;
 }
