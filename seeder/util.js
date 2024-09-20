@@ -1,5 +1,4 @@
 import { faker } from '@faker-js/faker';
-import { database } from './db.js';
 
 export const RESET = '\x1b[0m';
 export const BOLD = '\x1b[1m';
@@ -12,9 +11,10 @@ export const ARROW = '▶';
 export const ERROR = '⨯';
 export const UP_ARROW = '↑';
 
-export const getCreatedAt = () => Math.floor(+faker.date.past() / 1000);
+let identation = 0;
 
-export function runSql(sql, ...args) {
-	console.log(`${DIM}${UP_ARROW} Executing: ${BOLD}${sql}${RESET}`);
-	return database.prepare(sql).all(...args);
-}
+export const addIdentation = () => identation += 1;
+export const subIdentation = () => identation = Math.max(0, identation - 1);
+export const getIdentation = () => DIM + "╎ ".repeat(identation) + RESET;
+
+export const getCreatedAt = () => Math.floor(+faker.date.past() / 1000);
