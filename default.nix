@@ -3,11 +3,12 @@ inputs @ {
   lib ? pkgs.lib,
   stdenv ? pkgs.stdenv,
   flake-utils,
+  nodejs-22_9,
   ...
 }: let
 
   devShellBuildInputs = (with pkgs; [
-      nodejs
+      nodejs-22_9
       nodePackages.pnpm
       (import ./nix/wrangler.nix inputs)
 
