@@ -10,7 +10,7 @@ const DATA = {};
  * @param {null | (data: object, index: number) => void} extra
  */
 export function seedTable(count, table, fields, extra) {
-	DATA[table] = [];
+	DATA[table] = DATA[table] ?? [];
 	const d = [];
 
 	console.log(`${getIdentation()}${L_PURPLE}${ARROW} Creating ${count} rows in ${table}${RESET}`);
