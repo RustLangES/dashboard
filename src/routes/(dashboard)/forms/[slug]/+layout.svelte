@@ -65,6 +65,11 @@
 			console.error('Error updating form:', error);
 		}
 	}
+
+	async function handleAnswers() {
+		const id = $page.params.slug;
+		goto(`/forms/${id}/answers`);
+	}
 </script>
 
 <PageHeader {title}>
@@ -111,6 +116,7 @@
 			{/each}
 		</ul>
 		<Button on:click={handleUpdate} color="green">Update</Button>
+		<Button on:click={handleAnswers} color="orange">View Answers</Button>
 	</section>
 
 	<Divider orientation="vertical" mx="xl" />

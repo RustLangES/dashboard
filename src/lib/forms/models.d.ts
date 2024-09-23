@@ -17,6 +17,35 @@ export interface Form {
 	created_at: number;
 }
 
+export interface Session {
+	id: number;
+	device_id: string;
+	form_id: number;
+	external_id: number;
+	token: string;
+	last_answer: number;
+	steps: string;
+
+	/** Created datetime in seconds */
+	created_at: number;
+}
+
+export interface Answer {
+	id: number;
+	form_id: number;
+	question_id: number;
+	session_id: number;
+	data: string;
+}
+
+export interface External {
+	id: number;
+	external_id: string;
+	kind: string;
+	email: string;
+	token: string;
+}
+
 type Step<Type extends string, Data extends object> = {
 	id: number;
 	title: string;
