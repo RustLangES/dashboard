@@ -61,7 +61,7 @@ seedTable(
 	},
 	(_, form_id) => {
 		const questions = seedTable(CONFIG.questionsPerForm, 'Question', {
-			form_id: () => form_id,
+			form_id: () => form_id + 1,
 			title: () => faker.lorem.sentence({ min: 1, max: 5 }),
 			description: () => faker.lorem.paragraph(),
 			type: () => faker.helpers.arrayElement(['text', 'questionText', 'questionText', 'options', 'options']),
@@ -139,7 +139,7 @@ seedTable(
 					// TODO:
 					session_id: () => form_offset + session_idx + 1,
 					question_id: (_, idx) => form_id * CONFIG.questionsPerForm + idx + 1,
-					form_id: () => form_id,
+					form_id: () => form_id + 1,
 					data: ({ question_id }) => {
 						const questions = getRows('Question');
 						const question = questions[question_id - 1];
