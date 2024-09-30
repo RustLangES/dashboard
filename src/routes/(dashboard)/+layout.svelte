@@ -27,5 +27,6 @@
 
 	main {
 		width: 100%;
+		background-color: var(--svelteui-colors-dark700);
 	}
 </style>

@@ -11,7 +11,7 @@
 	--font-body: 'Geist Sans', -apple-system, Roboto, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
 		sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-
+	--links-color: #f77221;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
@@ -21,6 +21,10 @@ body {
 	min-height: 100vh;
 	margin: 0;
 	overflow-x: hidden;
+}
+
+a{
+	color: var(--links-color);
 }
 
 #SVELTEUI_PROVIDER {

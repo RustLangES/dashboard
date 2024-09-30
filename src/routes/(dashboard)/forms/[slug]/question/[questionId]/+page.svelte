@@ -124,14 +124,20 @@
 	<Switch label="Required" bind:checked={dataAux.required} />
 
 	<h3>Options</h3>
-	{#each options as value, index (index)}
-		<p>{value}</p>
+	<ul>
+		{#each options as value, index (index)}
+		<li>
+			<p>{value}</p>
+		</li>
 	{/each}
+	</ul>
 
-	<h4>Add new option</h4>
 	<InputWrapper
 		id="new-value-input-wrapper"
 		placeholder="Option"
+		label="Add new option"
+		override={{".label__add_new_option": { fontWeight: "bold" }}}
+		labelProps={{class: "label__add_new_option"}}
 		error={!newData ? newDataError : ''}
 	>
 		<Input id="new-value-input" bind:value={newData} />
@@ -148,5 +154,8 @@
 	.buttons {
 		display: flex;
 		justify-content: space-between;
+	}
+	ul{
+		margin: 0 3rem;
 	}
 </style>

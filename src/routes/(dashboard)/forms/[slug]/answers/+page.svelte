@@ -23,3 +23,12 @@
 		<li>No sessions avilable</li>
 	{/each}
 </ul>
+
+<style>
+	ul{
+		margin: 0 3rem;
+	}
+	ul li{
+		margin-bottom: 10px;
+	}
+</style>

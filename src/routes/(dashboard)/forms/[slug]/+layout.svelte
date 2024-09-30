@@ -80,7 +80,6 @@
 	<section class="form-container__details">
 		<TextInput
 			label="Description"
-			variant="unstyled"
 			size="xs"
 			placeholder="Write a description"
 			bind:value={description}
@@ -88,7 +87,6 @@
 
 		<TextInput
 			label="Edition"
-			variant="unstyled"
 			size="xs"
 			placeholder="Write a description"
 			bind:value={edition}
@@ -115,8 +113,10 @@
 				<li>No questions avilable</li>
 			{/each}
 		</ul>
-		<Button on:click={handleUpdate} color="green">Update</Button>
-		<Button on:click={handleAnswers} color="orange">View Answers</Button>
+		<div class="form-container__footer">
+			<Button on:click={handleAnswers} color="orange">View Answers</Button>
+			<Button on:click={handleUpdate} color="green">Update</Button>
+		</div>
 	</section>
 
 	<Divider orientation="vertical" mx="xl" />
@@ -130,6 +130,8 @@
 	.form-container {
 		display: grid;
 		grid-template-columns: 1fr auto 1fr;
+		padding-right: 20px;
+		margin: 20px;
 	}
 
 	.form-container__details {
@@ -139,9 +141,8 @@
 	}
 
 	.form-container__questions-list {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+		/* list-style: none; WHY */
+		margin: 0 3rem;
 	}
 
 	.form-container__new-question {
@@ -154,7 +155,17 @@
 		margin: 0;
 	}
 
+	.form-container__footer{
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+	}
+
 	.form-container__previewer {
 		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
 	}
 </style>
