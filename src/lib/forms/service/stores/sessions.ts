@@ -5,7 +5,7 @@ export const sessions = writable<(Session & { external: External })[]>();
 
 export async function loadSessionsFromDB(
 	platform: Readonly<App.Platform> | undefined,
-	formId: number
+	formId: number,
 ): Promise<(Session & { external: External })[]> {
 	const query = `
 		SELECT 
