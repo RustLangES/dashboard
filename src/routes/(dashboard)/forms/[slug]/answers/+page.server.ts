@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { loadSessionsFromDB, sessions } from '$lib/forms/service/stores/sessions';
+import { sessions } from '$lib/forms/service/stores/sessions';
 
 export const load: PageServerLoad = async ({ platform, params, parent }) => {
   const formId = +params.slug;
@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ platform, params, parent }) => {
 	const query = `
 		SELECT 
 			s.*,
-      (s.token ISNULL AND a.question_id = ?) as completed,
+      (s.token ISNULL OR a.question_id = ?) as completed,
 			e.external_id as e_external_id,
 			e.kind as e_kind,
 			e.email as e_email,
