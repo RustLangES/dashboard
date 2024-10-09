@@ -3,9 +3,7 @@ import { loadSessionsFromDB, sessions } from '$lib/forms/service/stores/sessions
 
 export const load: PageServerLoad = async ({ platform, params, parent }) => {
   const formId = +params.slug;
-  // questions and forms
   const parentData = await parent();
-  // console.log(parentData)
   const lastQuestion = parentData.questions.at(-1).id
 
 	const query = `
@@ -45,5 +43,9 @@ export const load: PageServerLoad = async ({ platform, params, parent }) => {
 
 	sessions.set(sessionsWithExternal);
 
+  console.log(parentData)
+  console.log(sessionsWithExternal)
+  console.log(lastQuestion)
+  
 	return { sessions: sessionsWithExternal };
 };

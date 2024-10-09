@@ -13,6 +13,7 @@
 	export let data;
 	receiveSessions(data);
 	let completed = FilterCompleted.All;
+	console.log(data);
 
 	function filterCompleted(session: Session & { completed: number }, completed: FilterCompleted) {
 		return (
@@ -56,4 +57,3 @@
 		margin-bottom: 10px;
 	}
 </style>
-
