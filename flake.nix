@@ -1,15 +1,17 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    wrangler.url = "github:ryand56/wrangler";
+    wrangler.inputs.nixpkgs.follows = "nixpkgs";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = {
     nixpkgs,
+    wrangler,
     flake-utils,
     ...
   }:
-  # Iterate over Arm, x86 for MacOs 🍎 and Linux 🐧
     flake-utils.lib.eachSystem (flake-utils.lib.defaultSystems) (
       system: let
         pkgs = nixpkgs.legacyPackages.${system};
@@ -25,17 +27,28 @@
 
           installPhase = ''
             mkdir -p $out
-
             mv * $out/
           '';
-
         };
 
-        bundle = import ./. {
-          inherit system flake-utils pkgs nodejs-22_9;
-        };
+        wrangler-pkg = wrangler.packages.${system}.wrangler;
       in {
-        inherit (bundle) apps devShells;
+        # `nix develop`
+        devShells.default = pkgs.mkShell {
+          buildInputs = with pkgs; [
+            nodejs-22_9
+            nodePackages.pnpm
+            wrangler-pkg
+
+            # Develop
+            deno
+            nodePackages.prettier
+            # nodePackages.prettier-plugin-svelte
+            nodePackages.typescript-language-server
+            nodePackages.svelte-language-server
+            nodePackages.vscode-langservers-extracted
+          ];
+        };
       }
     );
 }
