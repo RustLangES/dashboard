@@ -7,6 +7,11 @@ on:
       - main
     paths:
       - '.github/workflows/deploy.yml'
+      - 'src/'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - 'svente.config.js'
+      - 'vite.config.ts'
       - 'wrangler.toml'
 
 jobs:
@@ -29,7 +34,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: '3.77.0'
+          wranglerVersion: '4.19.1'
           secrets: |
             ADMINS
             AUTH_GITHUB_ID
