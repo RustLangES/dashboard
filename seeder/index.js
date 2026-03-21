@@ -22,7 +22,7 @@ function deleteTable(table) {
 
 function cleanDB() {
 	console.log(`${L_PURPLE}${ARROW} Clearing DB${RESET}`);
-  addIdentation();
+	addIdentation();
 
 	deleteTable('Form');
 	deleteTable('Question');
@@ -30,7 +30,7 @@ function cleanDB() {
 	deleteTable('Session');
 	deleteTable('External');
 
-  subIdentation();
+	subIdentation();
 	console.log(`${L_PURPLE}${ARROW} Cleared${RESET}`);
 }
 
@@ -64,7 +64,8 @@ seedTable(
 			form_id: () => form_id + 1,
 			title: () => faker.lorem.sentence({ min: 1, max: 5 }),
 			description: () => faker.lorem.paragraph(),
-			type: () => faker.helpers.arrayElement(['text', 'questionText', 'questionText', 'options', 'options']),
+			type: () =>
+				faker.helpers.arrayElement(['text', 'questionText', 'questionText', 'options', 'options']),
 			data: ({ type }) => {
 				if (type === 'text') {
 					return '{}';
@@ -161,7 +162,7 @@ seedTable(
 								: faker.helpers.arrayElement(options);
 						}
 
-            throw new Error("Unkown question type")
+						throw new Error('Unkown question type');
 					},
 					created_at: getCreatedAt,
 					deleted: () => 0
