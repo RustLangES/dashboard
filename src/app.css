@@ -11,9 +11,93 @@
 	--font-body: 'Geist Sans', -apple-system, Roboto, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue',
 		sans-serif;
 	--font-mono: 'Fira Mono', monospace;
-	--links-color: #f77221;
 	font-family: var(--font-body);
-	color: var(--color-text);
+
+	/* ── Naranja óxido — Primary ── */
+	--p-50: #fff6ed;
+	--p-100: #ffe8d4;
+	--p-200: #ffd2a8;
+	--p-300: #ffb270;
+	--p-400: #ff8637;
+	--p-500: #f15e1f;
+	--p-600: #f04906;
+	--p-700: #c73407;
+	--p-800: #9e2a0e;
+	--p-900: #7f260f;
+	--p-950: #450f05;
+
+	/* ── Violeta eléctrico — Secondary ── */
+	--s-50: #f4f3ff;
+	--s-100: #ebe9fe;
+	--s-200: #d9d6fe;
+	--s-300: #bdb4fd;
+	--s-400: #9a8afb;
+	--s-500: #7a5bf7;
+	--s-600: #6037ee;
+	--s-700: #5527da;
+	--s-800: #3e1c96;
+	--s-900: #3e1c96;
+	--s-950: #240f66;
+
+	/* ── Gris tiburón — Neutral ── */
+	--n-50: #f5f6f6;
+	--n-100: #e7e7e7;
+	--n-200: #d1d1d1;
+	--n-300: #b0b0b0;
+	--n-400: #888888;
+	--n-500: #6d6d6d;
+	--n-600: #5d5d5d;
+	--n-700: #4f4f4f;
+	--n-800: #454545;
+	--n-900: #3d3d3d;
+	--n-950: #222222;
+
+	/* ── Error ── */
+	--e-50: #fff1f1;
+	--e-100: #fee5e5;
+	--e-200: #fdced2;
+	--e-300: #fba6ac;
+	--e-400: #f97480;
+	--e-500: #f04257;
+	--e-600: #dd2140;
+	--e-700: #ba1636;
+	--e-800: #990f2e;
+	--e-900: #9c1533;
+	--e-950: #4a0717;
+
+	/* ── Alerta ── */
+	--a-50: #fdf7e9;
+	--a-100: #fbe7c7;
+	--a-200: #f7d591;
+	--a-300: #f0b042;
+	--a-400: #e89a24;
+	--a-500: #dc8316;
+	--a-600: #b86d21;
+	--a-700: #974411;
+	--a-800: #7d3816;
+	--a-900: #6b2e18;
+	--a-950: #3e360a;
+
+	/* ── Éxito ── */
+	--x-50: #f0fff5;
+	--x-100: #dafee9;
+	--x-200: #b8fad4;
+	--x-300: #80f5b4;
+	--x-400: #45e87f;
+	--x-500: #19ce38;
+	--x-600: #0ea955;
+	--x-700: #0d7b42;
+	--x-800: #126834;
+	--x-900: #115e32;
+	--x-950: #05301a;
+
+	/* ── Surfaces ── */
+	--bg: #111113;
+	--surface-1: #18191c;
+	--surface-2: #1e2023;
+	--surface-3: #252629;
+	--border: rgba(255, 255, 255, 0.07);
+	--border-hover: rgba(241, 94, 31, 0.5);
 }
 
 body {
@@ -21,10 +105,12 @@ body {
 	min-height: 100vh;
 	margin: 0;
 	overflow-x: hidden;
+	background: var(--bg);
+	color: var(--n-100);
 }
 
-a{
-	color: var(--links-color);
+a {
+	color: var(--p-400);
 }
 
 #SVELTEUI_PROVIDER {
