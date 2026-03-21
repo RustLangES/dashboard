@@ -2,58 +2,134 @@
 	import { page } from '$app/stores';
 	import type { Session } from '$lib/forms/models';
 	import { receiveSessions } from '$lib/forms/service/stores/sessions';
-	import { NativeSelect } from '@svelteuidev/core';
+	import Badge from '$lib/components/Badge.svelte';
+	import Tag from '$lib/components/Tag.svelte';
+	import PageHeader from '$lib/presentation/PageHeader.svelte';
 
-	enum FilterCompleted {
+	enum Filter {
+		All = 'All',
 		Completed = 'Completed',
-		NotCompleted = 'Not completed',
-		All = 'All'
+		Pending = 'Pending'
 	}
 
 	export let data;
 	receiveSessions(data);
-	let completed = FilterCompleted.All;
-	console.log(data);
+	let filter: Filter = Filter.All;
 
-	function filterCompleted(session: Session & { completed: number }, completed: FilterCompleted) {
-		return (
-			(completed === FilterCompleted.Completed && session.completed === 1) ||
-			(completed === FilterCompleted.NotCompleted && session.completed === 0) ||
-			completed === FilterCompleted.All
+	$: visible = data.sessions
+		.map(
+			(
+				session: Session & { completed: number; external: { email: string }; id: number },
+				i: number
+			) => ({ session, i })
+		)
+		.filter(
+			({ session }) =>
+				filter === Filter.All ||
+				(filter === Filter.Completed && session.completed === 1) ||
+				(filter === Filter.Pending && session.completed === 0)
 		);
-	}
 </script>
 
-<h1>ANSWERS</h1>
+<PageHeader title="Answers" />
 
-<NativeSelect
-	data={[FilterCompleted.Completed, FilterCompleted.NotCompleted, FilterCompleted.All]}
-	placeholder="Pick one"
-	label="Select an option"
-	bind:value={completed}
-/>
+<div class="page">
+	<div class="toolbar">
+		<span class="toolbar__count">{visible.length} sessions</span>
+		<div class="toolbar__filters">
+			{#each Object.values(Filter) as f}
+				<Tag label={f} selected={filter === f} on:click={() => (filter = f)} />
+			{/each}
+		</div>
+	</div>
 
-<ul>
-	{#each data.sessions as session, i}
-		{#if filterCompleted(session, completed)}
+	<ul class="list">
+		{#each visible as { session, i }}
 			<li>
-				<a href={`${$page.url.pathname}/${session.id}`}>
-					Session #{i + 1}
+				<a href={`${$page.url.pathname}/${session.id}`} class="session-row">
+					<div class="session-row__info">
+						<span class="session-row__label">Session #{i + 1}</span>
+						<span class="session-row__email">{session.external.email}</span>
+					</div>
+					<Badge variant={session.completed === 1 ? 'completed' : 'pending'} type="text" />
 				</a>
-
-				<p>{session.external.email}</p>
 			</li>
-		{/if}
-	{:else}
-		<li>No sessions avilable</li>
-	{/each}
-</ul>
+		{:else}
+			<li class="empty">No sessions found.</li>
+		{/each}
+	</ul>
+</div>
 
 <style>
-	ul {
-		margin: 0 3rem;
+	.page {
+		padding: 1.5rem;
+		max-width: 760px;
 	}
-	ul li {
-		margin-bottom: 10px;
+
+	.toolbar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+
+	.toolbar__count {
+		font-size: 0.78rem;
+		color: var(--n-500);
+		font-weight: 500;
+	}
+
+	.toolbar__filters {
+		display: flex;
+		gap: 0.375rem;
+	}
+
+	.list {
+		list-style: none;
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+	}
+
+	.session-row {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.75rem 1rem;
+		background: var(--surface-2);
+		border: 1px solid var(--border);
+		border-radius: 7px;
+		text-decoration: none;
+		transition:
+			border-color 0.12s,
+			background-color 0.12s;
+	}
+
+	.session-row:hover {
+		border-color: var(--border-hover);
+		background: var(--surface-3);
+	}
+
+	.session-row__info {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15rem;
+	}
+
+	.session-row__label {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--n-200);
+	}
+
+	.session-row__email {
+		font-size: 0.72rem;
+		color: var(--n-500);
+	}
+
+	.empty {
+		font-size: 0.85rem;
+		color: var(--n-600);
+		padding: 1rem 0;
 	}
 </style>

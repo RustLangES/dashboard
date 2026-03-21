@@ -43,9 +43,5 @@ export const load: PageServerLoad = async ({ platform, params, parent }) => {
 
 	sessions.set(sessionsWithExternal);
 
-  console.log(parentData)
-  console.log(sessionsWithExternal)
-  console.log(lastQuestion)
-  
 	return { sessions: sessionsWithExternal };
 };

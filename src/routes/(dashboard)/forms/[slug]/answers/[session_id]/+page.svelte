@@ -4,8 +4,6 @@
 	export let data;
 	receiveSessionDetails(data);
 
-	console.log(data);
-
 	/*
   - Si existe token
     - No ha terminado el form
