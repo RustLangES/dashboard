@@ -2,7 +2,6 @@
 	import '../../app.css';
 
 	import ThemeProvider, { setDarkTheme } from '$lib/presentation/ThemeProvider.svelte';
-
 	import Nav from '$lib/presentation/NavBar.svelte';
 	import { navbar } from '$lib/presentation/NavBar';
 
@@ -13,20 +12,27 @@
 </script>
 
 <ThemeProvider>
-	<Nav {selectedProject} {links} />
-
-	<main>
-		<slot />
-	</main>
+	<div class="layout">
+		<Nav {selectedProject} {links} />
+		<main>
+			<slot />
+		</main>
+	</div>
 </ThemeProvider>
 
 <style>
 	:global(body) {
+		background: var(--bg);
+	}
+
+	.layout {
 		display: flex;
+		min-height: 100vh;
 	}
 
 	main {
-		width: 100%;
-		background-color: var(--svelteui-colors-dark700);
+		flex: 1;
+		min-width: 0;
+		background: var(--bg);
 	}
 </style>
