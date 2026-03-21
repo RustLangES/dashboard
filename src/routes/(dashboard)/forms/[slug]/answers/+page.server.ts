@@ -2,14 +2,14 @@ import type { PageServerLoad } from './$types';
 import { sessions } from '$lib/forms/service/stores/sessions';
 
 export const load: PageServerLoad = async ({ platform, params, parent }) => {
-  const formId = +params.slug;
-  const parentData = await parent();
-  const lastQuestion = parentData.questions.at(-1).id
+	const formId = +params.slug;
+	const parentData = await parent();
+	const lastQuestion = parentData.questions.at(-1).id;
 
 	const query = `
 		SELECT 
 			s.*,
-      (s.token ISNULL OR a.question_id = ?) as completed,
+      COALESCE((s.token ISNULL OR a.question_id = ?), 0) as completed,
 			e.external_id as e_external_id,
 			e.kind as e_kind,
 			e.email as e_email,
@@ -31,7 +31,7 @@ export const load: PageServerLoad = async ({ platform, params, parent }) => {
 		last_answer: row.last_answer,
 		steps: row.steps,
 		created_at: row.created_at,
-    completed: row.completed,
+		completed: row.completed,
 		external: {
 			id: row.external_id,
 			external_id: row.e_external_id,
