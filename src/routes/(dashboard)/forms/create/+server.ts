@@ -9,7 +9,5 @@ export async function POST({ platform, request }: ServerLoadEvent) {
 		.bind(title, require_login, edition, multiple_times, created_at, description)
 		.all();
 
-	console.log(response.meta.last_row_id);
-
 	return new Response(response.meta.last_row_id);
 }

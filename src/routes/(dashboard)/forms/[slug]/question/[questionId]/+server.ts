@@ -6,8 +6,6 @@ export async function DELETE({ platform, request }: ServerLoadEvent) {
 		.bind(question_id)
 		.all();
 
-	console.log(response.meta.last_row_id);
-
 	return new Response(response.meta.last_row_id);
 }
 
@@ -21,8 +19,6 @@ export async function PATCH({ platform, request }: ServerLoadEvent) {
 		)
 			.bind(title, description, type, dataString, id_question)
 			.run();
-
-		console.log('Update response:', response);
 
 		return new Response(JSON.stringify({ success: true, id: id_question }), {
 			status: 200,
