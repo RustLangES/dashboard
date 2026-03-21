@@ -13,8 +13,8 @@ export const UP_ARROW = '↑';
 
 let identation = 0;
 
-export const addIdentation = () => identation += 1;
-export const subIdentation = () => identation = Math.max(0, identation - 1);
-export const getIdentation = () => DIM + "╎ ".repeat(identation) + RESET;
+export const addIdentation = () => (identation += 1);
+export const subIdentation = () => (identation = Math.max(0, identation - 1));
+export const getIdentation = () => DIM + '╎ '.repeat(identation) + RESET;
 
 export const getCreatedAt = () => Math.floor(+faker.date.past() / 1000);

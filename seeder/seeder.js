@@ -1,5 +1,17 @@
 import { database } from './db.js';
-import { addIdentation, ARROW, BOLD, DIM, ERROR, getIdentation, L_PURPLE, L_RED, RESET, subIdentation, UP_ARROW } from './util.js';
+import {
+	addIdentation,
+	ARROW,
+	BOLD,
+	DIM,
+	ERROR,
+	getIdentation,
+	L_PURPLE,
+	L_RED,
+	RESET,
+	subIdentation,
+	UP_ARROW
+} from './util.js';
 
 const DATA = {};
 
@@ -14,7 +26,7 @@ export function seedTable(count, table, fields, extra) {
 	const d = [];
 
 	console.log(`${getIdentation()}${L_PURPLE}${ARROW} Creating ${count} rows in ${table}${RESET}`);
-  addIdentation();
+	addIdentation();
 	const keys = Object.keys(fields);
 
 	const tableKeys = keys.join(', ');
@@ -65,7 +77,9 @@ ${RESET}`);
 			}
 		});
 
-		console.log(`${getIdentation()}${DIM}${UP_ARROW} Executing with ${BOLD}(${logValues.join(', ')})${RESET}`);
+		console.log(
+			`${getIdentation()}${DIM}${UP_ARROW} Executing with ${BOLD}(${logValues.join(', ')})${RESET}`
+		);
 
 		try {
 			query.run(...values);
@@ -97,7 +111,7 @@ ${RESET}`);
 		}
 	}
 
-  subIdentation();
+	subIdentation();
 
 	console.log(`${getIdentation()}${L_PURPLE}${ARROW} Created ${count} rows in ${table}${RESET}`);
 
