@@ -34,9 +34,9 @@ jobs:
       pull-requests: write
       deployments: write
     runs-on: ubuntu-latest
-    name: Deploy Preview to Cloudflare Pages
+    name: Deploy Preview to Cloudflare Workers
     env:
-      BRANCH_NAME: preview-${{ github.head_ref }}
+      WORKER_NAME: dashboard-pr-${{ github.event.pull_request.number }}
       ACTION_RUN: ${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}
     steps:
       - uses: actions/checkout@v3
@@ -52,20 +52,18 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           comment-author: 'github-actions[bot]'
           body: |
-            ## ⚡ Cloudflare Pages Deployment
-            | Name | Status | Preview |
-            | :--- | :----- | :------ |
-            | ${{env.BRANCH_NAME}}     |  🔨 Building ([Logs](${{env.ACTION_RUN}}))  | waiting... |
+            ## ⚡ Cloudflare Workers Preview
+            | Name | Status |
+            | :--- | :----- |
+            | ${{env.WORKER_NAME}} | 🔨 Building ([Logs](${{env.ACTION_RUN}})) |
 
       - uses: pnpm/action-setup@v4
         with:
           version: 9
 
       - name: Build
-        # env:
-        #   COLLABORATORS_API_TOKEN: ${{ secrets.COLLABORATORS_API_TOKEN }}
         run: |
-          pnpm install --frozen
+          pnpm install --frozen-lockfile
           pnpm run build
 
       - name: Deploy
@@ -80,8 +78,8 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          wranglerVersion: '3.67.0'
-          command: pages deploy ./dist --project-name=dashboard --branch="${{ env.BRANCH_NAME }}"
+          wranglerVersion: '4.19.1'
+          command: deploy --name "${{ env.WORKER_NAME }}"
           secrets: |
             ADMINS
             AUTH_GITHUB_ID
@@ -89,53 +87,14 @@ jobs:
             AUTH_SECRET
             AUTH_TRUST_HOST
 
-      - name: Extract hash from CF url Deploy
-        run: |
-          url_hash=$(echo "${{ steps.deploy.outputs.deployment-url }}" | sed -n 's|https://\([^.]*\).dashboard.*|\1|p')
-          echo "SHA_SHORT=$url_hash" >> $GITHUB_ENV
-
-      - name: Create comment
+      - name: Update comment
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.pull_request.number }}
           comment-id: ${{ steps.comment.outputs.comment-id }}
           edit-mode: replace
           body: |
-            ## ⚡ Cloudflare Pages Deployment
+            ## ⚡ Cloudflare Workers Preview
             | Name | Status | Preview |
             | :--- | :----- | :------ |
-            | ${{env.BRANCH_NAME}} | ✅ Ready ([Logs](${{env.ACTION_RUN}}))  | [${{env.SHA_SHORT}}](${{ steps.deploy.outputs.deployment-url }}) |
-
-  # remove-preview:
-  #   if: ${{ github.event.action == "closed" }}
-  #   permissions:
-  #     contents: read
-  #     pull-requests: write
-  #     deployments: write
-  #   runs-on: ubuntu-latest
-  #   name: Remove Preview of Cloudflare Pages
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: "recursive"
-  #         ref: ${{ github.event.pull_request.head.ref }}
-  #         repository: ${{ github.event.pull_request.head.repo.full_name }}
-
-  #     - name: Deploy
-  #       id: deploy
-  #       uses: cloudflare/wrangler-action@v3
-  #       with:
-  #         apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-  #         accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-  #         command: pages --project-name=homepage --branch="${ env.BRANCH_NAME }"
-
-  #     - name: Create comment
-  #       uses: peter-evans/create-or-update-comment@v4
-  #       with:
-  #         issue-number: ${{ github.event.pull_request.number }}
-  #         comment-author: 'github-actions[bot]'
-  #         body: |
-  #           ## ⚡ Removing Cloudflare Pages Preview
-  #           | Name | Status |
-  #           | :--- | :----- |
-  #           | ${{env.BRANCH_NAME}} | ✅ Removed |
+            | ${{env.WORKER_NAME}} | ✅ Ready ([Logs](${{env.ACTION_RUN}})) | ${{ steps.deploy.outputs.deployment-url }} |
