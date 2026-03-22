@@ -2,11 +2,17 @@ import type { ServerLoadEvent } from '@sveltejs/kit';
 
 export async function DELETE({ platform, request }: ServerLoadEvent) {
 	const { form_id } = await request.json();
-	const response = await platform!.env.FORMS_DB.prepare('DELETE FROM Form WHERE id = ?')
-		.bind(form_id)
-		.all();
 
-	return new Response(response.meta.last_row_id);
+	await platform!.env.FORMS_DB.batch([
+		platform!.env.FORMS_DB.prepare('DELETE FROM Answer WHERE form_id = ?').bind(form_id),
+		platform!.env.FORMS_DB.prepare('DELETE FROM Session WHERE form_id = ?').bind(form_id),
+		platform!.env.FORMS_DB.prepare('DELETE FROM Form WHERE id = ?').bind(form_id)
+	]);
+
+	return new Response(JSON.stringify({ success: true }), {
+		status: 200,
+		headers: { 'Content-Type': 'application/json' }
+	});
 }
 
 export async function PATCH({ platform, request }: ServerLoadEvent) {
