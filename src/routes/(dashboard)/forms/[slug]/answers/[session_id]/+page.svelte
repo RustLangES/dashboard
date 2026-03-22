@@ -19,10 +19,6 @@
 	const email = data.sessionDetails.external?.email ?? '—';
 	const createdAt = new Date(data.sessionDetails.created_at * 1000).toLocaleString();
 
-	function getQuestion(id: number): Question | undefined {
-		return data.questions.find((q) => q.id === id);
-	}
-
 	function answersForQuestion(questionId: number): Answer | undefined {
 		return data.sessionDetails.answers.find((a) => a.question_id === questionId);
 	}

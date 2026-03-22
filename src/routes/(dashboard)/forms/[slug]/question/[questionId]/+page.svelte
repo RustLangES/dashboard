@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NativeSelect, Switch, Textarea } from '@svelteuidev/core';
+	import { NativeSelect, Textarea } from '@svelteuidev/core';
 	import Button from '$lib/components/Button.svelte';
 	import { receiveQuestion } from '$lib/forms/service/stores/question';
 	import { goto } from '$app/navigation';

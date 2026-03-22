@@ -19,7 +19,7 @@ export async function PATCH({ platform, request }: ServerLoadEvent) {
 		const { id_question, title, description, type, data } = await request.json();
 		const dataString = JSON.stringify(data);
 
-		const response = await platform!.env.FORMS_DB.prepare(
+		await platform!.env.FORMS_DB.prepare(
 			'UPDATE Question SET title = ?, description = ?, type = ?, data = ? WHERE id = ?'
 		)
 			.bind(title, description, type, dataString, id_question)

@@ -20,7 +20,7 @@ export async function PATCH({ platform, request }: ServerLoadEvent) {
 		const { id_form, title, require_login, edition, multiple_times, description } =
 			await request.json();
 
-		const response = await platform!.env.FORMS_DB.prepare(
+		await platform!.env.FORMS_DB.prepare(
 			'UPDATE Form SET title = ?, require_login = ?, edition = ?, multiple_times = ?, description = ? WHERE id = ?'
 		)
 			.bind(title, require_login, edition, multiple_times, description, id_form)
