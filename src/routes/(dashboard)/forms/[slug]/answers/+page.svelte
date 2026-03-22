@@ -4,7 +4,6 @@
 	import { receiveSessions } from '$lib/forms/service/stores/sessions';
 	import Badge from '$lib/components/Badge.svelte';
 	import Tag from '$lib/components/Tag.svelte';
-	import PageHeader from '$lib/presentation/PageHeader.svelte';
 
 	enum Filter {
 		All = 'All',
@@ -31,9 +30,11 @@
 		);
 </script>
 
-<PageHeader title="Answers" />
+<svelte:head><title>Answers - RustLangES Dashboard</title></svelte:head>
 
 <div class="page">
+	<h2 class="page__title">Answers</h2>
+
 	<div class="toolbar">
 		<span class="toolbar__count">{visible.length} sessions</span>
 		<div class="toolbar__filters">
@@ -64,6 +65,14 @@
 	.page {
 		padding: 1.5rem;
 		max-width: 760px;
+	}
+
+	.page__title {
+		font-size: 1rem;
+		font-weight: 600;
+		color: var(--n-100);
+		letter-spacing: -0.01em;
+		margin-bottom: 1.25rem;
 	}
 
 	.toolbar {
