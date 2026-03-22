@@ -1,11 +1,12 @@
 <script lang="ts">
 	import PageHeader from '$lib/presentation/PageHeader.svelte';
 	import Button from '$lib/components/Button.svelte';
-	import { Divider, Switch, TextInput, Tooltip } from '@svelteuidev/core';
+	import { Divider, TextInput } from '@svelteuidev/core';
 
 	import type { Form, Question } from '$lib/forms/models';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { showSuccessToast, showErrorToast } from '../../../../utils/swalFunctions';
 
 	export let data: { form: Form; questions: Question[] };
 
@@ -14,6 +15,23 @@
 	let edition = data.form.edition;
 	let multiple_times = data.form.multiple_times === 1;
 	let description = data.form.description;
+	let lastFormId = data.form.id;
+
+	$: if (data.form.id !== lastFormId) {
+		lastFormId = data.form.id;
+		title = data.form.title;
+		require_login = data.form.require_login === 1;
+		edition = data.form.edition;
+		multiple_times = data.form.multiple_times === 1;
+		description = data.form.description;
+	}
+
+	$: isDirty =
+		title !== data.form.title ||
+		description !== data.form.description ||
+		edition !== data.form.edition ||
+		require_login !== (data.form.require_login === 1) ||
+		multiple_times !== (data.form.multiple_times === 1);
 
 	function handleClick() {
 		goto(`/forms/${$page.params.slug}/question/create`);
@@ -27,9 +45,11 @@
 				body: JSON.stringify({ form_id: parseInt($page.params.slug) })
 			});
 			if (!response.ok) throw new Error(`${response.status}`);
+			await showSuccessToast('Formulario eliminado');
 			goto('/forms');
 		} catch (error) {
 			console.error(error);
+			showErrorToast('Error al eliminar el formulario');
 		}
 	}
 
@@ -48,8 +68,15 @@
 				})
 			});
 			if (!response.ok) throw new Error(`${response.status}`);
+			data.form.title = title;
+			data.form.description = description;
+			data.form.edition = edition;
+			data.form.require_login = require_login ? 1 : 0;
+			data.form.multiple_times = multiple_times ? 1 : 0;
+			showSuccessToast('Formulario actualizado');
 		} catch (error) {
 			console.error('Error updating form:', error);
+			showErrorToast('Error al actualizar el formulario');
 		}
 	}
 </script>
@@ -58,7 +85,7 @@
 	<Button variant="ghost" on:click={() => goto(`/forms/${$page.params.slug}/answers`)}>
 		Answers
 	</Button>
-	<Button variant="primary" on:click={handleUpdate}>Update</Button>
+	<Button variant="primary" disabled={!isDirty} on:click={handleUpdate}>Update</Button>
 	<Button variant="danger" on:click={handleDelete}>Delete</Button>
 </PageHeader>
 
@@ -75,12 +102,14 @@
 		</div>
 
 		<div class="toggles">
-			<Tooltip label="The user requires login to respond to this form">
-				<Switch label="Require login" bind:checked={require_login} />
-			</Tooltip>
-			<Tooltip label="The user can respond multiple times">
-				<Switch label="Multiple times" bind:checked={multiple_times} />
-			</Tooltip>
+			<label class="toggle-row" title="The user requires login to respond to this form">
+				<input type="checkbox" bind:checked={require_login} />
+				Require login
+			</label>
+			<label class="toggle-row" title="The user can respond multiple times">
+				<input type="checkbox" bind:checked={multiple_times} />
+				Multiple times
+			</label>
 		</div>
 
 		<div class="questions-section">
@@ -142,6 +171,56 @@
 		background: var(--surface-2);
 		border: 1px solid var(--border);
 		border-radius: 8px;
+	}
+
+	.toggle-row {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--n-200);
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.toggle-row input[type='checkbox'] {
+		appearance: none;
+		position: relative;
+		width: 36px;
+		height: 20px;
+		min-width: 36px;
+		border-radius: 9999px;
+		background: var(--n-700);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		cursor: pointer;
+		transition:
+			background 0.15s,
+			border-color 0.15s;
+	}
+
+	.toggle-row input[type='checkbox']::before {
+		content: '';
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: var(--n-400);
+		transition:
+			transform 0.15s,
+			background 0.15s;
+	}
+
+	.toggle-row input[type='checkbox']:checked {
+		background: var(--p-500);
+		border-color: var(--p-600);
+	}
+
+	.toggle-row input[type='checkbox']:checked::before {
+		transform: translateX(16px);
+		background: #fff;
 	}
 
 	.questions-section {
@@ -213,7 +292,7 @@
 	}
 
 	.editor__preview {
-		overflow: hidden;
+		overflow-y: auto;
 		padding: 1.25rem;
 	}
 </style>

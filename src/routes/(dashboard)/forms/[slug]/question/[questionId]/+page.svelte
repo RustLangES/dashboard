@@ -4,47 +4,56 @@
 	import { receiveQuestion } from '$lib/forms/service/stores/question';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { showSuccessToast, showErrorToast } from '../../../../../../utils/swalFunctions';
 
 	export let data;
 
-	let dataAux: { canMultiple: boolean; required: boolean; options: string[] };
 	let title: string;
 	let description: string;
 	let type: string;
+	let required = false;
+	let canMultiple = false;
 	let newOption = '';
 	let newOptionError = '';
 	let options: string[] = [];
+	let lastQuestionId: number | undefined;
 
-	// Re-initialize all local state whenever the question changes
-	$: {
-		data.question.id;
+	let savedTitle: string;
+	let savedDescription: string;
+	let savedType: string;
+	let savedRequired = false;
+	let savedCanMultiple = false;
+	let savedOptions: string[] = [];
+
+	// Only re-initialize state when navigating to a different question
+	$: if (data.question.id !== lastQuestionId) {
+		lastQuestionId = data.question.id;
 		receiveQuestion(data);
 		const raw =
 			typeof data.question.data === 'string' ? JSON.parse(data.question.data) : data.question.data;
-		dataAux = {
-			canMultiple: raw.canMultiple ?? false,
-			required: raw.required ?? false,
-			options: raw.options ?? []
-		};
+		required = raw.required ?? false;
+		canMultiple = raw.canMultiple ?? false;
 		title = data.question.title;
 		description = data.question.description;
 		type = data.question.type;
-		options = dataAux.options ?? [];
+		options = raw.options ?? [];
 		newOption = '';
 		newOptionError = '';
+		savedTitle = title;
+		savedDescription = description;
+		savedType = type;
+		savedRequired = required;
+		savedCanMultiple = canMultiple;
+		savedOptions = [...options];
 	}
 
-	$: result = {
-		title,
-		description,
-		type,
-		data:
-			type === 'options'
-				? { canMultiple: dataAux.canMultiple, required: dataAux.required, options }
-				: type === 'questionText'
-					? { required: dataAux.required }
-					: {}
-	};
+	$: isDirty =
+		title !== savedTitle ||
+		description !== savedDescription ||
+		type !== savedType ||
+		required !== savedRequired ||
+		canMultiple !== savedCanMultiple ||
+		JSON.stringify(options) !== JSON.stringify(savedOptions);
 
 	function addOption() {
 		if (!newOption) {
@@ -68,9 +77,11 @@
 				body: JSON.stringify({ question_id: parseInt($page.params.questionId) })
 			});
 			if (!res.ok) throw new Error(`${res.status}`);
+			await showSuccessToast('Pregunta eliminada');
 			goto(`/forms/${$page.params.slug}`);
 		} catch (e) {
 			console.error(e);
+			showErrorToast('Error al eliminar la pregunta');
 		}
 	}
 
@@ -78,11 +89,11 @@
 		try {
 			const dataToSend =
 				type === 'options'
-					? { canMultiple: dataAux.canMultiple, required: dataAux.required, options }
+					? { canMultiple, required, options }
 					: type === 'questionText'
-						? { required: dataAux.required }
+						? { required }
 						: {};
-			await fetch(window.location.href, {
+			const res = await fetch(window.location.href, {
 				method: 'PATCH',
 				headers: { 'Content-Type': 'application/json' },
 				body: JSON.stringify({
@@ -93,8 +104,17 @@
 					data: dataToSend
 				})
 			});
+			if (!res.ok) throw new Error(`${res.status}`);
+			savedTitle = title;
+			savedDescription = description;
+			savedType = type;
+			savedRequired = required;
+			savedCanMultiple = canMultiple;
+			savedOptions = [...options];
+			showSuccessToast('Pregunta guardada');
 		} catch (e) {
 			console.error(e);
+			showErrorToast('Error al guardar la pregunta');
 		}
 	}
 </script>
@@ -118,12 +138,21 @@
 
 		{#if type === 'questionText'}
 			<div class="section section--toggles">
-				<Switch label="Required" bind:checked={dataAux.required} />
+				<label class="toggle-row">
+					<input type="checkbox" bind:checked={required} />
+					Required
+				</label>
 			</div>
 		{:else if type === 'options'}
 			<div class="section section--toggles">
-				<Switch label="Allow multiple answers" bind:checked={dataAux.canMultiple} />
-				<Switch label="Required" bind:checked={dataAux.required} />
+				<label class="toggle-row">
+					<input type="checkbox" bind:checked={canMultiple} />
+					Allow multiple answers
+				</label>
+				<label class="toggle-row">
+					<input type="checkbox" bind:checked={required} />
+					Required
+				</label>
 			</div>
 
 			<div class="section">
@@ -174,7 +203,7 @@
 
 		<div class="footer">
 			<Button variant="danger" on:click={handleDelete}>Delete</Button>
-			<Button variant="primary" on:click={handleUpdate}>Save changes</Button>
+			<Button variant="primary" disabled={!isDirty} on:click={handleUpdate}>Save changes</Button>
 		</div>
 	</div>
 
@@ -194,7 +223,7 @@
 				{#if description}
 					<p class="preview__desc">{description}</p>
 				{/if}
-				{#if dataAux.required}
+				{#if required}
 					<span class="preview__required">Required</span>
 				{/if}
 				<div class="preview__input-mock">Type your answer…</div>
@@ -204,8 +233,8 @@
 					<p class="preview__desc">{description}</p>
 				{/if}
 				<div class="preview__meta">
-					{#if dataAux.required}<span class="preview__required">Required</span>{/if}
-					{#if dataAux.canMultiple}<span class="preview__multi">Multiple</span>{/if}
+					{#if required}<span class="preview__required">Required</span>{/if}
+					{#if canMultiple}<span class="preview__multi">Multiple</span>{/if}
 				</div>
 				<ul class="preview__options">
 					{#each options as opt}
@@ -244,6 +273,56 @@
 		display: flex;
 		flex-direction: column;
 		gap: 0.75rem;
+	}
+
+	.toggle-row {
+		display: flex;
+		align-items: center;
+		gap: 0.625rem;
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: var(--n-200);
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.toggle-row input[type='checkbox'] {
+		appearance: none;
+		position: relative;
+		width: 36px;
+		height: 20px;
+		min-width: 36px;
+		border-radius: 9999px;
+		background: var(--n-700);
+		border: 1px solid rgba(255, 255, 255, 0.1);
+		cursor: pointer;
+		transition:
+			background 0.15s,
+			border-color 0.15s;
+	}
+
+	.toggle-row input[type='checkbox']::before {
+		content: '';
+		position: absolute;
+		top: 2px;
+		left: 2px;
+		width: 14px;
+		height: 14px;
+		border-radius: 50%;
+		background: var(--n-400);
+		transition:
+			transform 0.15s,
+			background 0.15s;
+	}
+
+	.toggle-row input[type='checkbox']:checked {
+		background: var(--p-500);
+		border-color: var(--p-600);
+	}
+
+	.toggle-row input[type='checkbox']:checked::before {
+		transform: translateX(16px);
+		background: #fff;
 	}
 
 	.section--toggles {

@@ -4,6 +4,7 @@
 	import type { Question, QuestionOptions } from '$lib/forms/models';
 	import { goto } from '$app/navigation';
 	import { page } from '$app/stores';
+	import { showSuccessToast, showErrorToast } from '../../../../../../utils/swalFunctions';
 
 	let title = '';
 	let titleError = '';
@@ -67,9 +68,11 @@
 			});
 			if (!res.ok) throw new Error(`${res.status}`);
 			const questionId = await res.json();
+			await showSuccessToast('Pregunta creada');
 			goto(`/forms/${$page.params.slug}/question/${questionId}`);
 		} catch (e) {
 			console.error(e);
+			showErrorToast('Error al crear la pregunta');
 		}
 	}
 </script>
