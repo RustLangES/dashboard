@@ -33,8 +33,17 @@
 <div class="detail">
 	<div class="detail__header">
 		<a href={answersListUrl} class="back-link">
-			<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-				<path d="M19 12H5M12 5l-7 7 7 7"/>
+			<svg
+				width="14"
+				height="14"
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="2.5"
+				stroke-linecap="round"
+				stroke-linejoin="round"
+			>
+				<path d="M19 12H5M12 5l-7 7 7 7" />
 			</svg>
 			Back to sessions
 		</a>
@@ -57,7 +66,8 @@
 				<div class="answer-card" class:answer-card--empty={!answer?.data}>
 					<div class="answer-card__meta">
 						<span class="answer-card__index">#{i + 1}</span>
-						<span class="answer-card__type">{question.type === 'options' ? 'Options' : 'Text'}</span>
+						<span class="answer-card__type">{question.type === 'options' ? 'Options' : 'Text'}</span
+						>
 					</div>
 					<p class="answer-card__question">{question.title}</p>
 					{#if answer?.data}

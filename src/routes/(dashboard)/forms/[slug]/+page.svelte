@@ -29,16 +29,38 @@
 			<div class="form-header__meta">
 				{#if data.form.require_login === 1}
 					<span class="meta-tag">
-						<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" />
+						<svg
+							width="11"
+							height="11"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<rect x="3" y="11" width="18" height="11" rx="2" /><path
+								d="M7 11V7a5 5 0 0 1 10 0v4"
+							/>
 						</svg>
 						Requires login
 					</span>
 				{/if}
 				{#if data.form.multiple_times === 1}
 					<span class="meta-tag">
-						<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-							<polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline points="7 23 3 19 7 15" /><path d="M21 13v2a4 4 0 0 1-4 4H3" />
+						<svg
+							width="11"
+							height="11"
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2.5"
+							stroke-linecap="round"
+							stroke-linejoin="round"
+						>
+							<polyline points="17 1 21 5 17 9" /><path d="M3 11V9a4 4 0 0 1 4-4h14" /><polyline
+								points="7 23 3 19 7 15"
+							/><path d="M21 13v2a4 4 0 0 1-4 4H3" />
 						</svg>
 						Multiple responses allowed
 					</span>
